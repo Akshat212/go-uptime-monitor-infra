@@ -118,6 +118,38 @@ resource "aws_s3_bucket" "herbs-s3-bucket" {
   }
 }
 
+# ECR registry
+resource "aws_ecr_repository" "go-uptime-monitor-app" {
+  name = "go-uptime-monitor-app"
+  image_tag_mutability = "MUTABLE"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+}
+
+# ECR registry rule
+resource "aws_ecr_lifecycle_policy" "herbs-ecr-policy" {
+  repository = aws_ecr_repository.go-uptime-monitor-app.name
+
+  policy = jsonencode({
+    rules = [
+      {
+        rulePriority : 1
+        description : "Keep last 10 images"
+        selection : {
+          tagStatus : "any"
+          countType : "imageCountMoreThan"
+          countNumber : 10
+        }
+        action = {
+          type : "expire"
+        }
+      }
+    ]
+  })
+}
+
 resource "random_id" "bucket_id" {
   byte_length = 8 
 }
