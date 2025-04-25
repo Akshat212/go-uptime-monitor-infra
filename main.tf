@@ -9,7 +9,7 @@ resource "aws_vpc" "herbs_main_vpc" {
   }
 }
 
-# Public Subnet
+# Public Subnet 1
 resource "aws_subnet" "herbs_public_subnet" {
   vpc_id = aws_vpc.herbs_main_vpc.id
   cidr_block = var.subnet_cidr
@@ -18,6 +18,18 @@ resource "aws_subnet" "herbs_public_subnet" {
 
   tags = {
     Name = "herbs-public-subnet"
+  }
+}
+
+# Public Subnet 2
+resource "aws_subnet" "herbs_public_subnet_2" {
+  vpc_id = aws_vpc.herbs_main_vpc.id
+  cidr_block = var.subnet_cidr
+  map_public_ip_on_launch = true
+  availability_zone = "${var.region}b"
+
+  tags = {
+    Name = "herbs-public-subnet-2"
   }
 }
 
