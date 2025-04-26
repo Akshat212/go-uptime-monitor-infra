@@ -24,7 +24,7 @@ resource "aws_subnet" "herbs_public_subnet" {
 # Public Subnet 2
 resource "aws_subnet" "herbs_public_subnet_2" {
   vpc_id = aws_vpc.herbs_main_vpc.id
-  cidr_block = var.subnet_cidr
+  cidr_block = var.subnet_cidr_2
   map_public_ip_on_launch = true
   availability_zone = "${var.region}b"
 
@@ -169,4 +169,8 @@ resource "random_id" "bucket_id" {
 resource "aws_key_pair" "deployer" {
   key_name = "herbs-ec2-key"
   public_key = var.public_key
+}
+
+module "ecs" {
+  source = "./ecs"
 }

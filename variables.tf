@@ -20,9 +20,14 @@ variable "vpc_cidr" {
   default = "10.0.0.0/16"
 }
 
-# Subnet CIDR
+# Subnet1 CIDR
 variable "subnet_cidr" {
   default = "10.0.1.0/24"
+}
+
+# Subnet2 CIDR
+variable "subnet_cidr_2" {
+  default = "10.0.2.0/24"
 }
 
 # Key
