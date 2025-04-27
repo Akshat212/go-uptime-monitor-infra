@@ -173,4 +173,16 @@ resource "aws_key_pair" "deployer" {
 
 module "ecs" {
   source = "./ecs"
+  sg_id = aws_security_group.herbs_sg.id
+  subnet_ids = [ aws_subnet.herbs_public_subnet.id, aws_subnet.herbs_public_subnet_2.id ]
+  tg_arn = module.lb.tg_arn
+  app_listener = module.lb.app_listener
+  ecs_task_execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
+}
+
+module "lb" {
+  source = "./lb"
+  sg_id = aws_security_group.herbs_sg.id
+  subnet_ids = [aws_subnet.herbs_public_subnet.id, aws_subnet.herbs_public_subnet_2.id]
+  vpc_id = aws_vpc.herbs_main_vpc.id
 }

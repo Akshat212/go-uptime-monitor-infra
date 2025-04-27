@@ -2,7 +2,7 @@ resource "aws_lb_target_group" "ecs_tg" {
   name = "go-monitor-tg"
   protocol = "HTTP"
   port = 8080
-  vpc_id = aws_vpc.main.id
+  vpc_id = var.vpc_id
 
   target_type = "ip"
   health_check {

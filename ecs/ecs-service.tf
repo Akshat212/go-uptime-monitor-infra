@@ -6,16 +6,16 @@ resource "aws_ecs_service" "main" {
   launch_type = "FARGATE"
 
   network_configuration {
-    subnets = [ aws_subnet.herbs_public_subnet.id, aws_subnet.herbs_public_subnet_2.id ]
-    security_groups = [ aws_security_group.herbs_sg.id ]
+    subnets = var.subnet_ids
+    security_groups = [ var.sg_id ]
     assign_public_ip = true
   }
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.ecs_tg.arn
+    target_group_arn = var.tg_arn
     container_name = "go-uptime-monitor-container"
     container_port = 8080
   }
 
-  depends_on = [ aws_lb_listener.app_listener ]
+  depends_on = [ var.app_listener ]
 }
