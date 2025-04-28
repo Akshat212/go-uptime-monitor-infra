@@ -13,7 +13,7 @@ resource "aws_ecs_service" "main" {
 
   load_balancer {
     target_group_arn = var.tg_arn
-    container_name = "go-uptime-monitor-container"
+    container_name = "go-monitoring-cluster"
     container_port = 8080
   }
 
