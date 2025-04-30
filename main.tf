@@ -56,9 +56,15 @@ resource "aws_route_table" "herbs_rt" {
   }
 }
 
-# Route Table Association
-resource "aws_route_table_association" "herbs_rt_assoc" {
+# Route Table Association Subnet 1
+resource "aws_route_table_association" "herbs_rt_assoc_subnet_1" {
   subnet_id = aws_subnet.herbs_public_subnet.id
+  route_table_id = aws_route_table.herbs_rt.id
+}
+
+# Route Table Association Subnet 2
+resource "aws_route_table_association" "herbs_rt_assoc_subnet_2" {
+  subnet_id = aws_subnet.herbs_public_subnet_2.id
   route_table_id = aws_route_table.herbs_rt.id
 }
 
