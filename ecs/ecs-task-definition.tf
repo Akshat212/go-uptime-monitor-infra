@@ -15,7 +15,16 @@ resource "aws_ecs_task_definition" "go_monitoring_task" {
                 containerPort = 8080
                 hostPort = 8080
             }
-        ]
+        ],
+        logConfiguration = {
+          logDriver = "awslogs",
+          options = {
+            awslogs-group = "/ecs/go-monitor-app",
+            awslogs-create-group = "true",
+            awslogs-region = "ap-south-1",
+            awslogs-stream-prefix = "ecs"
+          }
+        }
     }
   ])
 }

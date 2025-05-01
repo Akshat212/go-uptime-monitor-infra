@@ -82,8 +82,8 @@ resource "aws_vpc_security_group_ingress_rule" "allow_ssh" {
   security_group_id = aws_security_group.herbs_sg.id
   ip_protocol = "tcp"
   cidr_ipv4 = var.my_ip
-  from_port = "22"
-  to_port = "22"
+  from_port = 22
+  to_port = 22
 }
 
 # Security Group Igress Allow HTTP
@@ -91,8 +91,17 @@ resource "aws_vpc_security_group_ingress_rule" "allow_http" {
   security_group_id = aws_security_group.herbs_sg.id
   ip_protocol = "tcp"
   cidr_ipv4 = aws_vpc.herbs_main_vpc.cidr_block
-  from_port = "80"
-  to_port = "80"
+  from_port = 80
+  to_port = 80
+}
+
+# Security Group Ingress 
+resource "aws_vpc_security_group_ingress_rule" "allow_alb_to_ecs" {
+  security_group_id = aws_security_group.herbs_sg.id
+  ip_protocol = "tcp"
+  from_port = 8080
+  to_port = 8080
+  referenced_security_group_id = aws_security_group.herbs_sg.id
 }
 
 # Security Group Egress
@@ -110,16 +119,6 @@ resource "aws_instance" "herbs_instance" {
   vpc_security_group_ids = [ aws_security_group.herbs_sg.id ]
   key_name = aws_key_pair.deployer.key_name
   associate_public_ip_address = true
-
-  user_data = <<-EOF
-              #!/bin/bash
-              apt install postgresql postgresql-contrib -y
-              sudo -u postgres psql -c "CREATE USER dev WITH PASSWORD 'password';"
-              sudo -u postgres psql -c "CREATE DATABASE devdb OWNER dev;"
-              echo "listen_addresses='*'" >> /etc/postgresql/14/main/postgresql.conf
-              echo "host all  all    0.0.0.0/0  md5" >> /etc/postgresql/14/main/pg_hba.conf
-              systemctl restart postgresql
-              EOF
 
   tags = {
     Name = "herbs-instance"
@@ -166,6 +165,12 @@ resource "aws_ecr_lifecycle_policy" "herbs-ecr-policy" {
       }
     ]
   })
+}
+
+# Log group
+resource "aws_cloudwatch_log_group" "ecs-app" {
+  name = "/ecs/go-monitor-app"
+  retention_in_days = 7
 }
 
 resource "random_id" "bucket_id" {
