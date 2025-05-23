@@ -41,3 +41,8 @@ variable "my_ip" {
   description = "My IP address with CIDR suffix"
   type = string
 }
+
+# Cert ARN
+variable "aws_acm_arn" {
+  type = string
+}

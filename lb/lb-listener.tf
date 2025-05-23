@@ -1,7 +1,9 @@
 resource "aws_lb_listener" "app_listener" {
   load_balancer_arn = aws_alb.herbs-alb.arn
-  port = 80
+  port = 443
   protocol = "HTTP"
+  ssl_policy = "ELBSecurityPolicy-2016-08"
+  certificate_arn = var.acm_cert_arn
 
   default_action {
     type = "forward"

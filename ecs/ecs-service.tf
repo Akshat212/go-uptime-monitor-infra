@@ -2,7 +2,7 @@ resource "aws_ecs_service" "main" {
   name = "go-monitor-service"
   cluster = aws_ecs_cluster.go_monitoring_cluster.id
   task_definition = aws_ecs_task_definition.go_monitoring_task.arn
-  desired_count = 1
+  desired_count = 2
   launch_type = "FARGATE"
 
   force_new_deployment = true

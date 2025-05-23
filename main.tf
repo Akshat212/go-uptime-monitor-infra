@@ -87,21 +87,30 @@ resource "aws_vpc_security_group_ingress_rule" "allow_ssh" {
 }
 
 # Security Group Igress Allow HTTP
-resource "aws_vpc_security_group_ingress_rule" "allow_http" {
-  security_group_id = aws_security_group.herbs_sg.id
-  ip_protocol = "tcp"
-  cidr_ipv4 = aws_vpc.herbs_main_vpc.cidr_block
-  from_port = 80
-  to_port = 80
-}
+# resource "aws_vpc_security_group_ingress_rule" "allow_http" {
+#   security_group_id = aws_security_group.herbs_sg.id
+#   ip_protocol = "tcp"
+#   cidr_ipv4 = aws_vpc.herbs_main_vpc.cidr_block
+#   from_port = 80
+#   to_port = 80
+# }
 
 # Security Group Ingress 
-resource "aws_vpc_security_group_ingress_rule" "allow_alb_to_ecs" {
+# resource "aws_vpc_security_group_ingress_rule" "allow_alb_to_ecs" {
+#   security_group_id = aws_security_group.herbs_sg.id
+#   ip_protocol = "tcp"
+#   from_port = 8080
+#   to_port = 8080
+#   cidr_ipv4 = "0.0.0.0/0"
+# }
+
+# Security Group Allow Ingress HTTPS
+resource "aws_vpc_security_group_ingress_rule" "allow_https" {
   security_group_id = aws_security_group.herbs_sg.id
   ip_protocol = "tcp"
-  from_port = 8080
-  to_port = 8080
-  referenced_security_group_id = aws_security_group.herbs_sg.id
+  cidr_ipv4 = "0.0.0.0/0"
+  from_port = 443
+  to_port = 443
 }
 
 # Security Group Egress
@@ -194,6 +203,7 @@ module "ecs" {
 module "lb" {
   source = "./lb"
   sg_id = aws_security_group.herbs_sg.id
-  subnet_ids = [aws_subnet.herbs_public_subnet.id, aws_subnet.herbs_public_subnet_2.id]
+  subnet_ids = [ aws_subnet.herbs_public_subnet.id, aws_subnet.herbs_public_subnet_2.id ]
   vpc_id = aws_vpc.herbs_main_vpc.id
+  acm_cert_arn = var.aws_acm_arn
 }

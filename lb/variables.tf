@@ -9,3 +9,7 @@ variable "sg_id" {
 variable "vpc_id" {
   type = string
 }
+
+variable "acm_cert_arn" {
+  type = string
+}
